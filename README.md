@@ -1,6 +1,6 @@
 # Observability Stack
 
-Simply install the observability stack - Prometheus, Jaeger, Loki, and Grafana in your environment.
+Simply install Observability Stack ("ObservStack") - Prometheus, Jaeger, Loki, and Grafana in your environment.
 
 It comes with the demo application "hotrod", fully instrumented with Prometheus, Jaeger and Loki logging
 
@@ -12,30 +12,27 @@ There are a set of tools you will need to download and install.
 
 Follow instructions [here](https://docs.docker.com/install/).
 
-_Note_: Thie Observ Stack uses Docker Compose for installation. If you are using Docker Desktop for Mac or Windows, Compose is already included. If you are using a Linux system, follow instructions [here](https://docs.docker.com/compose/install/) for installations. 
+_Note_: ObservStack uses Docker Compose for installation. If you are using Docker Desktop for Mac or Windows, Compose is already included. If you are using a Linux system, follow instructions [here](https://docs.docker.com/compose/install/) for installations. 
 
 ## Instructions
 
-If you wish to use a Kubernetes cluster other than a local `k3d` one, please adjust these
-instructions accordingly.
-
-1. Clone Observ Stack repository
+1. Clone ObservStack repository
 ```sh
 $ git clone https://orahub.oci.oraclecorp.com/saas-dev-black/observstack.git
 $ cd observstack
 ```
 
-2. Install Observ Stack
+2. Install ObservStack
 ```
 $ docker-compose up -d
 ```  
 
 3. Wait
-It will take some time to install the stack - there's a lot of downloading to do.
+It will take some time to install ObservStack - there's a lot of downloading to do.
 
-## Accessing the Stack
+## Accessing ObservStack
 
-You should now be able to access the stack via 
+You should now be able to access ObservStack via 
 - Grafana [http://localhost:3000/](http://localhost:3000).
 - Prometheus [http://localhost:9090/](http://localhost:9090).
 - Jaeger [http://localhost:16686/](http://localhost:16686).
@@ -58,8 +55,8 @@ _Note_: You should generate some traffic to the app. Open [http://localhost:8080
 - Run this query `{job="demo/hotrod"} | json`
 - Choose a log line with a traceID -> Jaeger
 
-## Disabling/enabling your Stack
-Should you wish to disable your stack, use this command:
+## Disabling/enabling ObservStack
+Should you wish to disable your Stack, use this command:
 
 ```sh
 $ cd observstack
@@ -68,9 +65,9 @@ $ docker compose down
 
 ## Configuring your Applications
 
-To see metrics, logs, traces from your applications in the stack, refer the following examples.
+To see metrics, logs, traces from your applications via ObservStack, refer the following examples.
 
-_Note_: As default, the stack is launched in the `observstack_default` network by Docker Engine.
+_Note_: As default, ObservStack is launched in the `observstack_default` network by Docker Engine.
 
 - The following command will start a container in the same network, send logs to Loki, and traces to Jaeger. 
 ```

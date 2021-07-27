@@ -1,4 +1,4 @@
-/ Observability Stack
+# Observability Stack
 
 Simply install Observability Stack ("ObservStack") - Prometheus, Jaeger, Loki, and Grafana in your environment.
 

@@ -1,8 +1,10 @@
-# Observability Stack
+/ Observability Stack
 
 Simply install Observability Stack ("ObservStack") - Prometheus, Jaeger, Loki, and Grafana in your environment.
 
-It comes with the demo application "hotrod", fully instrumented with Prometheus, Jaeger and Loki logging
+- It comes with the demo application "hotrod", fully instrumented.
+- Grafana is pre-configured with the persistence storage (./data directory).
+- Prometheus, Jaeger, and Loki are pre-configured as stateless / ephemeral.
 
 ## Prerequisites
 
@@ -39,7 +41,7 @@ You should now be able to access ObservStack via
 
 ## Hotrod Demo Application
 
-To see how the staxck works, use the demo app. 
+To see how the stack works, use the demo app. 
 _Note_: You should generate some traffic to the app. Open [http://localhost:8080/](http://localhost:8080) and click the buttons several times.
 
 ### Metrics -> Logs -> Traces

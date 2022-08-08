@@ -63,7 +63,7 @@ class MinimumSizeSubarray {
  *
  *  public int minSubArrayLen(int target, int[] numbers) {dfd
  *
- *     if(numbers.length == 0 ) return 0;
+ *     if(numbers.length == 0 ) return 0;DFD
  *     int count = Integer.MAX_VALUE;
  *     int sum = 0;
  *     int left = 0;

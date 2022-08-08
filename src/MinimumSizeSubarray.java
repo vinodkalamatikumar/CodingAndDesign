@@ -56,7 +56,7 @@ class MinimumSizeSubarray {
     }
 
 
-    //more cleaner code
+    //more cleaner coded
 
 
 /**

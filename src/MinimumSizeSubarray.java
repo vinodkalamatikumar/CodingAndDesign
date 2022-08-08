@@ -8,7 +8,7 @@ Explanation: The subarray [4,3] has the minimal length under the problem constra
 */
 
 class MinimumSizeSubarray {
-    public static void main(String args[]) {
+    public static void main(String args[]) {1
 
         int[] nums = {1, 4, 5, 6, 1, 1, 3};
         int target = 7;

@@ -61,7 +61,7 @@ class MinimumSizeSubarray {
 
 /**
  *
- *  public int minSubArrayLen(int target, int[] numbers) {
+ *  public int minSubArrayLen(int target, int[] numbers) {dfd
  *
  *     if(numbers.length == 0 ) return 0;
  *     int count = Integer.MAX_VALUE;

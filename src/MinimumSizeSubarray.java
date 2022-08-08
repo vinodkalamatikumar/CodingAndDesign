@@ -73,7 +73,7 @@ class MinimumSizeSubarray {
  *         sum += numbers[i];
  *         while(sum >= target) {
  *             //find and update count
- *             count = Math.min(count, i - left + 1);
+ *             count = Math.min(count, i - left + 1);df
  *             sum -= numbers[left];
  *             left++;
  *         }

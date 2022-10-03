@@ -56,14 +56,14 @@ class MinimumSizeSubarray {
     }
 
 
-    //more cleaner code
+    //more cleaner coded
 
 
 /**
  *
- *  public int minSubArrayLen(int target, int[] numbers) {
+ *  public int minSubArrayLen(int target, int[] numbers) {dfd
  *
- *     if(numbers.length == 0 ) return 0;
+ *     if(numbers.length == 0 ) return 0;DFD
  *     int count = Integer.MAX_VALUE;
  *     int sum = 0;
  *     int left = 0;
@@ -73,7 +73,7 @@ class MinimumSizeSubarray {
  *         sum += numbers[i];
  *         while(sum >= target) {
  *             //find and update count
- *             count = Math.min(count, i - left + 1);
+ *             count = Math.min(count, i - left + 1);df
  *             sum -= numbers[left];
  *             left++;
  *         }

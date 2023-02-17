@@ -1,22 +1,11 @@
 version: "3"
 
 x-logging: &default-logging
-  driver: loki
-  options:
-    loki-url: 'http://localhost:3100/api/prom/push'
-    labels: namespace
-    loki-relabel-config: |
-      - action: replace
-        source_labels: ["namespace","compose_service"]
-        separator: "/"
-        target_label: job
-      - action: replace
-        source_labels: ["container_id"]
-        target_label: hostname
+   driver: "json-file"
 
 services:
   loki:
-    image: grafana/loki:2.2.1
+    image: phx.ocir.io/idvjmdrn1r3d/observstack/grafana/loki:2.2.1
     ports:
       - "3100:3100"
     command: 
@@ -25,10 +14,16 @@ services:
       - -table-manager.retention-deletes-enabled=true
     labels:
       namespace: monitoring
+    healthcheck:
+      test: sleep 90
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 120s
     logging: *default-logging
 
   grafana:
-    image: grafana/grafana:8.0.6
+    image: phx.ocir.io/idvjmdrn1r3d/observstack/grafana/grafana:8.0.6
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
@@ -38,15 +33,16 @@ services:
       - ./dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
       - ./dashboards:/etc/grafana/dashboards
       # This volume is used as persistent storage (database and plugins)
-      - ./data:/var/lib/grafana
+      - ./data:/var/lib/grafana:/var/lib/grafana
     ports:
       - "3000:3000"
     labels:
       namespace: monitoring
+    user: "root"
     logging: *default-logging
 
   jaeger:
-    image: jaegertracing/all-in-one:1.24.0
+    image: phx.ocir.io/idvjmdrn1r3d/observstack/jaegertracing/all-in-one:1.24.0
     environment:
       - COLLECTOR_ZIPKIN_HOST_PORT=:9411
     ports:
@@ -64,7 +60,7 @@ services:
     logging: *default-logging
 
   prometheus:
-    image: prom/prometheus:v2.28.1
+    image: phx.ocir.io/idvjmdrn1r3d/observstack/prom/prometheus:v2.28.1
     user: root
     command: 
       - --config.file=/etc/prometheus/prometheus.yml
@@ -82,7 +78,7 @@ services:
     logging: *default-logging
 
   hotrod:
-    image: us-ashburn-1.ocir.io/idh4mthlx4v6/observarch/hotrod:1.0.5
+    image: phx.ocir.io/idvjmdrn1r3d/observstack/jaegertracing/example-hotrod:1.35.0
     ports:
       - "8080-8083:8080-8083"
     environment:
@@ -94,3 +90,19 @@ services:
       namespace: demo
     logging: *default-logging
 
+  vector:
+    image: phx.ocir.io/idvjmdrn1r3d/observstack/timberio/vector:0.22.1-alpine
+    ports:
+      - "8383:8383"
+    environment:
+      DOCKER_HOST: 'unix://var/run/docker.sock'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./vector.toml:/etc/vector/vector.toml:ro 
+    user: root
+    labels:
+      namespace: monitoring
+      service: vector
+    depends_on:
+      loki:
+        condition: service_healthy

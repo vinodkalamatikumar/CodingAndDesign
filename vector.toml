@@ -1,0 +1,18 @@
+[sources.docker_logs]
+type = "docker_logs"
+
+[sinks.loki]
+type = "loki"
+inputs = [ "docker_logs" ]
+endpoint = "http://loki:3100"
+compression = "none"
+
+  [sinks.loki.labels]
+  hostname = "{{ container_id }}"
+  container_name = "{{ container_name }}" 
+  namespace = "{{ label.namespace }}"
+  service = "{{ label.\"com.docker.compose.service\" }}"
+  job = "{{ label.namespace }}/{{ label.\"com.docker.compose.service\" }}"
+
+  [sinks.loki.encoding]
+  codec = "text"

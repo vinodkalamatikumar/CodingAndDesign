@@ -21,7 +21,7 @@ datasources:
     jsonData:
       derivedFields:
         - datasourceUid: jaeger
-          matcherRegex: '["]?[tT][rR][aA][cC][eE][\s\S]?[\-]?[\_]?[iI][dD]["]?[=|:]["]?(\w+)["]?'
+          matcherRegex: '["]?[tT][rR][aA][cC][eE][\_]?[iI][dD]["]?[=|:][\s\S]?["]?(\w+)["]?'
           name: traceID
           url: $${__value.raw}
       maxLines: 1000

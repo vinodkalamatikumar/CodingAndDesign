@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: monitoring
+  name: loki
+spec:
+  replicas: 1 
+  selector:   
+    matchLabels:
+      app: loki
+  template: # create pods using pod definition in this template
+    metadata:
+      labels:
+        app: loki
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3100"
+    spec:
+      containers:
+      - name: loki
+        image: phx.ocir.io/idvjmdrn1r3d/observstack/grafana/loki:2.8.0
+        ports:
+        - containerPort: 3100
+        args: ["-table-manager.retention-period=1d", "-config.file=/etc/loki/local-config.yaml", "-table-manager.retention-deletes-enabled=true"]
+        volumeMounts:
+          - mountPath: /loki/rules/fake
+            name: cache-volume
+          - name: local-config-yaml
+            mountPath: /etc/loki/
+          - mountPath: /loki/ingester/wal
+            name: ingester-wal
+          - mountPath: /loki/ruler/wal
+            name: ruler-wal
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi
+          limits:
+            cpu: 150m
+            memory: 250Mi
+      volumes:
+      - name: cache-volume
+        emptyDir: {}
+      - name: local-config-yaml
+        projected:
+          sources:
+            - configMap:
+                name: local-config-yaml
+      - name: ingester-wal 
+        emptyDir: {}
+      - name: ruler-wal
+        emptyDir: {}

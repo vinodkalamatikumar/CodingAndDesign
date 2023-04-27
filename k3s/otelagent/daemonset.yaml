@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: otelagent
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: otelagent
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        app: otelagent
+    spec:
+      containers:
+        - name: otelagent
+          image: phx.ocir.io/idvjmdrn1r3d/observstack/otel/opentelemetry-collector-contrib:0.75.0
+          env:
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+          args:
+            - --config=/conf/agent.yaml
+          ports:
+            - name: otlp-grpc
+              containerPort: 4317
+              hostPort: 4317
+            - name: otlp-http
+              containerPort: 4318
+              hostPort: 4318
+            - name: thrift-http
+              containerPort: 14268
+              hostPort: 14268
+            - name: jaeger-grpc
+              containerPort: 14250
+              hostPort: 14250
+          volumeMounts:
+            - mountPath: /conf
+              name: agent-config-volume
+      volumes:
+        - name: agent-config-volume
+          configMap:
+             name: agent-config
+      serviceAccountName: otelagent

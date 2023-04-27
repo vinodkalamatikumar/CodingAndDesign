@@ -1,0 +1,8 @@
+app:
+  greeting: "Hello"
+server:
+  port: 8080
+
+tracing:
+  # required
+  service: "observe-app"

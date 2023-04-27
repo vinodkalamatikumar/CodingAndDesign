@@ -1,0 +1,70 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-pvc
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: monitoring
+  labels:
+    app: minio
+  name: minio
+spec:
+  selector:
+    matchLabels:
+      app: minio
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      securityContext:
+        fsGroup: 472
+        supplementalGroups:
+          - 0
+      containers:
+        - name: minio
+          image: phx.ocir.io/idvjmdrn1r3d/observstack/minio/minio:RELEASE.2022-09-07T22-25-02Z
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c", "mkdir -p /data/mimir-blocks /data/mimir-ruler /data/mimir-alertmanager && minio server /data --console-address :9001"]
+          ports:
+            - containerPort: 9000
+              name: http-minio
+              protocol: TCP
+            - containerPort: 9001
+              name: http-minio-cons
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 500m
+              memory: 500M
+            limits:
+              cpu: 550m
+              memory: 550M
+          env:
+            # - name: "MINIO_ACCESS_KEY"
+            #   value: "mimir"
+            # - name: "MINIO_SECRET_KEY"
+            #   value: "supersecret"
+            - name: "MINIO_ROOT_USER"
+              value: "minioadmin"
+            - name: "MINIO_ROOT_PASSWORD"
+              value: "minioadmin"
+          volumeMounts:
+            - mountPath: /data
+              name: minio-pv
+      volumes:
+        - name: minio-pv
+          persistentVolumeClaim:
+            claimName: minio-pvc

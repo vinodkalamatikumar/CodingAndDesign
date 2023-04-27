@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: monitoring
+  annotations:
+    service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: None
+spec:
+  ports:
+    - port: 9000
+      protocol: TCP
+      targetPort: http-minio
+      name: http-minio
+    - port: 9001
+      protocol: TCP
+      targetPort: http-minio-cons
+      name: http-minio-cons
+  selector:
+    app: minio
+  sessionAffinity: None
+  type: ClusterIP

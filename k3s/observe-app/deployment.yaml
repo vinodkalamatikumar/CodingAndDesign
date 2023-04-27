@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: monitoring
+  name: observe-app
+spec:
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  selector:   #tell deployment which app to manage, defined in the template section below
+    matchLabels:
+      app: observe-app
+  template: # create pods using pod definition in this template
+    metadata:
+      # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: observe-app
+    spec:
+      containers:
+      - name: observe-app
+        image: phx.ocir.io/idvjmdrn1r3d/observstack/observe-app:1.1
+        imagePullPolicy: Always
+        env:
+          - name: MY_NODE_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: "TRACING_HOST"
+            value: "$(MY_NODE_IP)"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi
+          limits:
+            cpu: 100m
+            memory: 250Mi
+        ports:
+        - containerPort: 8080

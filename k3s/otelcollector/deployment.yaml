@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otelcollector
+  namespace: monitoring
+  labels:
+    app: otelcollector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otelcollector
+  template:
+    metadata:
+      labels:
+        app: otelcollector
+    spec:
+      containers:
+      - name: otelcollector
+        image: phx.ocir.io/idvjmdrn1r3d/observstack/otel/opentelemetry-collector-contrib:0.75.0
+        args:
+          - "--config=/conf/collector.yaml"
+        ports:
+          - containerPort: 4317
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200M
+          limits:
+            cpu: 150m
+            memory: 250M
+        volumeMounts:
+        - mountPath: /conf
+          name: collector-config-volume
+      volumes:
+        - name: collector-config-volume  
+          configMap:
+            name: collector-config

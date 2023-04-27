@@ -1,1 +1,4 @@
-data
+observe-app/target/*
+build*sh
+push*sh
+create_manifest.sh
